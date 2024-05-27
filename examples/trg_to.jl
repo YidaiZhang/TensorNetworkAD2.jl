@@ -1,6 +1,6 @@
 using TensorNetworkAD2
 using TensorNetworkAD2.TensorOperations
-using TensorNetworkAD2.Plots
+using CairoMakie
 
 Dcut = 30
 n = 30

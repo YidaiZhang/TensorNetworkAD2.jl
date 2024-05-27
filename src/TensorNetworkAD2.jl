@@ -2,7 +2,6 @@ module TensorNetworkAD2
 
 using LinearAlgebra
 using TensorOperations
-using Plots
 using Enzyme
 using OMEinsum
 
