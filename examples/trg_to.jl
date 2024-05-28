@@ -1,6 +1,8 @@
 using TensorNetworkAD2
 using TensorNetworkAD2.TensorOperations
 using CairoMakie
+using ReverseDiff
+using TensorNetworkAD2.Enzyme
 
 Dcut = 30
 n = 30
@@ -19,6 +21,8 @@ for K in β
 end
 F = - ts.* lnZ
 
+
+
 # taking the first derivative
 dF = - diff(lnZ)./diff(β)
 
@@ -27,12 +31,16 @@ dF = - diff(lnZ)./diff(β)
 indices = findall(x -> 0.40 <= x <= 0.50, β[1:end-1])
 
 # Plot only the selected range
-plot(β[indices], dF[indices], label="energy density", xlabel="β", ylabel="energy density", title="reproduce", seriestype=:line)
-scatter!(β[indices], dF[indices], label="-∂lnZ/∂β")
+fig = Figure()
+ax = Axis(fig[1, 1], xlabel="β", ylabel="energy density", title="reproduce")
 
+lines!(ax, β[indices], dF[indices], label="energy density")
+scatter!(ax, β[indices], dF[indices], label="-∂lnZ/∂β")
+
+fig
 
 # save figure
-savefig("energy_density_to.png")
+save("specific_heat.png", fig)
 
 # taking the second derivative with β^2
 dS = - β[1:end-2].^2 .* diff(dF)./diff(β[1:end-1])
@@ -40,9 +48,13 @@ dS = - β[1:end-2].^2 .* diff(dF)./diff(β[1:end-1])
 indices = findall(x -> 0.40 <= x <= 0.50, β[1:end-2])
 
 # Plot only the selected range
-plot(β[indices], dS[indices], label="specific heat", xlabel="β", ylabel="specific heat", title="reproduce", seriestype=:line)
-scatter!(β[indices], dS[indices], label="β^2(∂^2lnZ/∂β^2)")
+fig2 = Figure()
+ax2 = Axis(fig2[1, 1], xlabel="β", ylabel="specific heat", title="reproduce")
 
+lines!(ax2, β[indices], dS[indices], label="specific heat")
+scatter!(ax2, β[indices], dS[indices], label="β^2(∂^2lnZ/∂β^2)")
+
+fig2
 
 # save figure
-savefig("specific_heat_to.png")
+save("specific_heat_to.png", fig2)
