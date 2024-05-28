@@ -15,3 +15,6 @@ y = trg(K, Dcut, n);
 #@show lnZ
 println(K, " ", y/2^n)
 
+T = rand(2,2,2,2)
+T11 = reshape(T, (D^2, D^2))
+
