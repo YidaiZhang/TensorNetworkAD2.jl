@@ -8,7 +8,7 @@ function trg(K::Float64, Dcut::Int, no_iter::Int)
     
     T = ein"(ai, aj), (ak, al) -> ijkl"(M, M, M, M)
     lnZ = 0.0
-    
+
 
     for n in collect(1:no_iter)
 
