@@ -12,9 +12,9 @@ function trg(K::Float64, Dcut::Int, no_iter::Int)
     for n in collect(1:no_iter)
 
         #println(n, " ", maximum(T), " ", minimum(T))
-        maxval = maximum(T)
+        maxval = maximum(abs.(T))
         T = T/maxval
-        lnZ += 2^(no_iter-n+1)*log(maxval)
+        lnZ += 2.0^(no_iter-n+1)*log(maxval)
 
         D_new = min(D^2, Dcut)
 
