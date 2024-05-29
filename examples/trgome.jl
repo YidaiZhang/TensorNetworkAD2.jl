@@ -6,21 +6,16 @@ using TensorNetworkAD2.LinearAlgebra
 
 Dcut = 30
 n = 30
-
-ts = 2.52:-0.01:1.98;
-β = inv.(ts);
+β = 0.39:0.002:0.51;
 
 lnZ = []
 for K in β
-    t = 1.0/K
     #T = Ising( K )
     y = trg(K, Dcut, n);
     #@show lnZ
-    println(1/K, " ", y/2^n)
+    println(K, " ", y/2^n)
     push!(lnZ,y/2^n)
 end
-F = - ts.* lnZ
-
 
 
 # taking the first derivative
