@@ -9,7 +9,6 @@ function trg(K::Float64, Dcut::Int, no_iter::Int)
     T = ein"(ai, aj), (ak, al) -> ijkl"(M, M, M, M)
     lnZ = 0.0
 
-
     for n in collect(1:no_iter)
 
         #println(n, " ", maximum(T), " ", minimum(T))
@@ -23,15 +22,12 @@ function trg(K::Float64, Dcut::Int, no_iter::Int)
         T11 = reshape(T1, (D^2, D^2))
         T2 = ein"urdl -> ldru"(T)
         T22 = reshape(T2, (D^2, D^2))
-
         F = svd(T11)
-
         F1 = reshape(F.U[:,1:D_new]*Diagonal(sqrt.(F.S[1:D_new])), (D, D, D_new))
         F3 = reshape(Diagonal(sqrt.(F.S[1:D_new]))*F.Vt[1:D_new, :], (D_new, D, D))
         F = svd(T22)
         F2 = reshape(F.U[:,1:D_new]*Diagonal(sqrt.(F.S[1:D_new])), (D, D, D_new))
         F4 = reshape(Diagonal(sqrt.(F.S[1:D_new]))*F.Vt[1:D_new, :], (D_new, D, D))
-
         T_new = ein"(war,abu),(lbg,dgw) -> ruld"(F1, F2, F3, F4)
 
         D = D_new

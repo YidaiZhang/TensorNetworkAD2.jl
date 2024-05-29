@@ -4,6 +4,14 @@ using TensorNetworkAD2.Enzyme
 using TensorNetworkAD2.OMEinsum
 using TensorNetworkAD2.LinearAlgebra
 
+M = [[sqrt(cosh(K)) sqrt(sinh(K))];
+         [sqrt(cosh(K)) -sqrt(sinh(K))];
+         ]
+T = ein"(ai, aj), (ak, al) -> ijkl"(M, M, M, M)
+lp = exp(0.5)+exp(-0.5)
+lm = exp(0.5)-exp(-0.5)
+lp^2/2
+lm^2/2
 Dcut = 20
 n = 20
 
@@ -15,6 +23,5 @@ y = trg(K, Dcut, n);
 #@show lnZ
 println(K, " ", y/2^n)
 
-T = rand(2,2,2,2)
-T11 = reshape(T, (D^2, D^2))
-
+T_rand = rand(2,2,2,2)
+T11 = reshape(T_rand, (D^2, D^2))
