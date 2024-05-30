@@ -4,9 +4,10 @@ authors = ["YidaiZhang"]
 version = "1.0.0-DEV"
 
 [deps]
-Enzyme = "7da242da-08ed-463a-9acd-ee780be4f1d9"
+ITensors = "9136182c-28ba-11e9-034c-db9fb085ebd5"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 OMEinsum = "ebe7aa44-baf0-506c-a96f-8464559b3922"
+QuadGK = "1fd47b50-473d-5c70-9696-f719f8f3bcdc"
 TensorOperations = "6aa20fa7-93e2-5fca-9bc0-fbd0db3c71a2"
 
 [compat]
