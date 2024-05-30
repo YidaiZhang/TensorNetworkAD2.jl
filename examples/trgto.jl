@@ -2,7 +2,6 @@ using TensorNetworkAD2
 using TensorNetworkAD2.TensorOperations
 using CairoMakie
 using ReverseDiff
-using TensorNetworkAD2.Enzyme
 
 Dcut = 30
 n = 30

@@ -1,7 +1,3 @@
-using ITensors
-using LinearAlgebra
-using QuadGK
-
 function ising_mpo(
   pair_sₕ::Pair{<:Index,<:Index},
   pair_sᵥ::Pair{<:Index,<:Index},

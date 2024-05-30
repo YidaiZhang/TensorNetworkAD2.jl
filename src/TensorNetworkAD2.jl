@@ -1,9 +1,10 @@
 module TensorNetworkAD2
 
 using LinearAlgebra
-using TensorOperations
-using Enzyme
+using ITensors
 using OMEinsum
+using TensorOperations
+using QuadGK
 
 export TRG
 export trg

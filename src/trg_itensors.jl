@@ -1,4 +1,3 @@
-using ITensors
 
 """
     trg(T::ITensor; χmax::Int, nsteps::Int) -> κ, T

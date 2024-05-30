@@ -1,6 +1,5 @@
 using TensorNetworkAD2
 using CairoMakie
-using TensorNetworkAD2.Enzyme
 using TensorNetworkAD2.OMEinsum
 using TensorNetworkAD2.LinearAlgebra
 
