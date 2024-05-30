@@ -4,8 +4,8 @@ using TensorNetworkAD2.Enzyme
 using TensorNetworkAD2.OMEinsum
 using TensorNetworkAD2.LinearAlgebra
 
-Dcut = 30
-n = 30
+Dcut = 20
+n = 20
 β = 0.39:0.002:0.51;
 
 lnZ = []
@@ -53,3 +53,5 @@ fig2
 
 # save figure
 save("specific_heat_to.png", fig2)
+
+

@@ -1,3 +1,4 @@
 [deps]
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
 TensorNetworkAD2 = "2ea729ad-3ca8-4d46-8a0a-38f7dc88b7de"
