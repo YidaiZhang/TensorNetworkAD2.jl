@@ -1,18 +1,9 @@
-export IPEPS, SquareIPEPS
-"""
-    IPEPS{LT<:AbstractLattice, T, N}
-
-Infinite projected entangled pair of states.
-`LT` is the type of lattice, `T` and `N` are bulk tensor element type and order.
-"""
-
 abstract type AbstractLattice end
 
 struct SquareLattice <: AbstractLattice end
 
 struct IPEPS{LT<:AbstractLattice, T, N, AT<:AbstractArray{T, N}}
     bulk::AT
-    # TODO: check input size in constructor
 end
 IPEPS{LT}(bulk::AT) where {LT,T,N,AT<:AbstractArray{T,N}} = IPEPS{LT,T,N,AT}(bulk)
 
@@ -28,12 +19,6 @@ end
 getd(ipeps::SquareIPEPS) = size(ipeps.bulk, 1)
 gets(ipeps::SquareIPEPS) = size(ipeps.bulk, 5)
 
-"""
-    indexperm_symmetrize(ipeps::SquareIPEPS)
-
-return a `SquareIPEPS` based on `ipeps` that is symmetric under
-permutation of its virtual indices.
-"""
 function indexperm_symmetrize(ipeps::SquareIPEPS)
     x = ipeps.bulk
     x += permutedims(x, (1,4,3,2,5)) # left-right

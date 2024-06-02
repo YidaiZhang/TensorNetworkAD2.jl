@@ -1,9 +1,6 @@
-
-export AbstractLattice, SquareLattice
 abstract type AbstractLattice end
-struct SquareLattice <: AbstractLattice end
 
-export CTMRGRuntime, SquareCTMRGRuntime
+struct SquareLattice <: AbstractLattice end
 
 # NOTE: should be renamed to more explicit names
 """
@@ -145,16 +142,4 @@ function ctmrgstep(rt::SquareCTMRGRuntime, vals)
     edge /= norm(edge)
 
     return SquareCTMRGRuntime(bulk, corner, edge), vals
-end
-
-function (st::StopFunction)(state)
-    st.counter += 1
-    st.counter > st.maxit && return true
-
-    vals = state[2]
-    diff = norm(vals - st.oldvals)
-    diff <= st.tol && return true
-    st.oldvals = vals
-
-    return false
 end

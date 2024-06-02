@@ -2,21 +2,20 @@ using TensorNetworkAD2
 using TensorNetworkAD2.OMEinsum
 
 h = hamiltonian(Heisenberg())
+
 ipeps = SquareIPEPS(rand(2,2,2,2,2));
-ipeps = TensorNetworkAD2.indexperm_symmetrize(ipeps);
-TensorNetworkAD2.energy(h,ipeps, χ=20, tol=1e-6,maxit=100)
 
-function energy(h::AbstractArray{T,4}, ipeps::IPEPS; χ::Int, tol::Real, maxit::Int) where T
-    ipeps = indexperm_symmetrize(ipeps)  # NOTE: this is not good
-    D = getd(ipeps)^2
-    s = gets(ipeps)
-    ap = ein"abcdx,ijkly -> aibjckdlxy"(ipeps.bulk, conj(ipeps.bulk))
-    ap = reshape(ap, D, D, D, D, s, s)
-    a = ein"ijklaa -> ijkl"(ap)
+A = TensorNetworkAD2.indexperm_symmetrize(ipeps);
 
-    rt = SquareCTMRGRuntime(a, Val(:raw), χ)
-    rt  = ctmrg(rt; tol=tol, maxit=maxit)
-    e = expectationvalue(h, ap, rt)
-    return e
-end
-energy(h,ipeps, χ=20, tol=1e-6,maxit=100)
+
+B = rand(2,2,2,2)
+E = OMEinsum.ein"ijkl -> ijk"(B)
+C = OMEinsum.ein"ijkl -> ij"(B)
+
+
+
+C_new = ein"ij,ijk,ijk,klij -> ijkl"(C,E,E,B)
+E_new = ein"ij,ijkl -> ik"(C,E,B)
+
+
+
