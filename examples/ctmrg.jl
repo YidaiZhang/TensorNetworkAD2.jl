@@ -6,9 +6,8 @@ h = hamiltonian(Heisenberg())
 ipeps = SquareIPEPS(rand(2,2,2,2,2));
 
 A = TensorNetworkAD2.indexperm_symmetrize(ipeps);
-
-
-B = rand(2,2,2,2)
+A
+A = ein"abcdx,ijkly -> aibjckdlxy"(ipeps.bulk, conj(ipeps.bulk))
 E = OMEinsum.ein"ijkl -> ijk"(B)
 C = OMEinsum.ein"ijkl -> ij"(B)
 
