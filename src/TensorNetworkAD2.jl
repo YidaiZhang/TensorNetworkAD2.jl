@@ -6,10 +6,10 @@ using OMEinsum
 using TensorOperations
 using QuadGK
 using Random
-using IterTools: iterated
+using IterTools: iterated,imap
 using Base.Iterators: take, drop
 using Optim, LineSearches
-
+using Zygote
 
 
 export TRG
@@ -18,8 +18,9 @@ export trg_i
 export ising_mpo, ising_free_energy
 export hamiltonian, Heisenberg
 export IPEPS, SquareIPEPS
-export energy
+export energy, expectationvalue, optimiseipeps
 export StopFunction
+export fixedpoint
 
 
 
@@ -31,5 +32,6 @@ include("2d_heisenbergmodel.jl")
 include("ipeps.jl")
 include("ctmrg.jl")
 include("energy.jl")
+include("fixpoint.jl")
 
 end

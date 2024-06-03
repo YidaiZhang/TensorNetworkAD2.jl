@@ -2,16 +2,7 @@ abstract type AbstractLattice end
 
 struct SquareLattice <: AbstractLattice end
 
-# NOTE: should be renamed to more explicit names
-"""
-    CTMRGRuntime{LT}
 
-a struct to hold the tensors during the `ctmrg` algorithm, containing
-- `D × D × D × D` `bulk` tensor
-- `χ × χ` `corner` tensor
-- `χ × D × χ` `edge` tensor
-and `LT` is a AbstractLattice to define the lattice type.
-"""
 struct CTMRGRuntime{LT,T,N,AT<:AbstractArray{T,N},CT,ET}
     bulk::AT
     corner::CT
@@ -28,29 +19,7 @@ SquareCTMRGRuntime(bulk::AT,corner,edge) where {T,AT<:AbstractArray{T, 4}} = CTM
 getχ(rt::CTMRGRuntime) = size(rt.corner, 1)
 getD(rt::CTMRGRuntime) = size(rt.bulk, 1)
 
-@doc raw"
-    SquareCTMRGRuntime(bulk::AbstractArray{T,4}, env::Val, χ::Int)
 
-create a `SquareCTMRGRuntime` with bulk-tensor `bulk`. The corner and edge
-tensors are initialized according to `env`. If `env = Val(:random)`,
-the corner is initialized as a random χ×χ tensor and the edge is initialized
-as a random χ×D×χ tensor where `D = size(bulk,1)`.
-If `env = Val(:raw)`, corner- and edge-tensor are initialized by summing
-over one or two indices of `bulk` respectively and embedding the result
-in zeros-tensors of the appropriate size, truncating if necessary.
-
-# example
-
-```jldoctest; setup = :(using TensorNetworkAD)
-julia> rt = SquareCTMRGRuntime(randn(2,2,2,2), Val(:raw), 4);
-
-julia> rt.corner[1:2,1:2] ≈ dropdims(sum(rt.bulk, dims = (3,4)), dims = (3,4))
-true
-
-julia> rt.edge[1:2,1:2,1:2] ≈ dropdims(sum(rt.bulk, dims = 4), dims = 4)
-true
-```
-"
 function SquareCTMRGRuntime(bulk::AbstractArray{T,4}, env::Val, χ::Int) where T
     return SquareCTMRGRuntime(bulk, _initializect_square(bulk, env, χ)...)
 end
@@ -78,27 +47,26 @@ function _initializect_square(bulk::AbstractArray{T,4}, env::Val{:raw}, χ::Int)
 end
 
 
-"""
-    ctmrg(rt::CTMRGRuntime; tol, maxit)
+mutable struct StopFunction{T,S}
+    oldvals::T
+    counter::Int
+    tol::S
+    maxit::Int
+end
 
-return a `CTMRGRuntime` with an environment consisting of
-corner and edge tensor that have either been iterated for `maxit` iterations
-or converged according to `tol`.
-Convergence is tested by looking at the sum of the absolut differences in the
-corner singular values. If it is less than `tol`, convergence is reached.
+function (st::StopFunction)(state)
+    st.counter += 1
+    st.counter > st.maxit && return true
 
-# example
-```
-julia> a = model_tensor(Ising(),β);
+    vals = state[2]
+    diff = norm(vals - st.oldvals)
+    diff <= st.tol && return true
+    st.oldvals = vals
 
-julia> rt = SquareCTMRGRuntime(a, Val(:random), χ);
+    return false
+end
 
-julia> env = ctmrg(rt; tol=1e-6, maxit=100);
-```
 
-for the environment of an isingmodel at inverse temperature β
-on an infinite square lattice.
-"""
 function ctmrg(rt::CTMRGRuntime; tol::Real, maxit::Integer)
     # initialize
     oldvals = fill(Inf, getχ(rt)*getD(rt))
@@ -108,13 +76,7 @@ function ctmrg(rt::CTMRGRuntime; tol::Real, maxit::Integer)
     return rt
 end
 
-"""
-    ctmrgstep(rt,vals)
 
-evaluate one step of the ctmrg-algorithm, returning a tuple of an updated `CTMRGRuntime`
-with updated `corner` and `edge` tensor and a vector of singular values to test
-convergence with.
-"""
 function ctmrgstep(rt::SquareCTMRGRuntime, vals)
     # grow
     bulk, corner, edge = rt.bulk, rt.corner, rt.edge

@@ -87,7 +87,7 @@ We can also define the corner tensors as a special combination of the bulk tenso
 ---
 
 We want to solve this self-consistent equation iteratively.
-![alt text](image-20.png)
+![alt text](image-27.png)
 
 ---
 
