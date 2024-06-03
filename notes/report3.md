@@ -48,30 +48,46 @@ We consider an infinite projected entangled pair state (iPEPS) as the variationa
 
 ---
 
-We consider a variational study of the square lattice antifer- romagnetic Heisenberg model with the Hamiltonian：
+Consider 2 higher-order tensors $T^{s1,s2,s3,s4,s5,s6}$ and $W^{s1, s2, s3, s4, s5, s6}$, say that we want to compute the inner product of $T$ and $W$, if $W$=$T$this operation computes the norm of $T$. We want to compute:
 
-$$H=\sum_{\langle i,j\rangle}S_i^xS_j^x+S_i^yS_j^y+S_i^zS_j^z$$
+![alt text](image-24.png)
+
+---
+
+We consider a variational study of the square lattice antifer- romagnetic Heisenberg model, and we want to find the ground state, minimize the expect energy: $\langle\psi|H|\psi\rangle/\langle\psi|\psi\rangle$ 
+
+We can see that the overlap of the iPEPS forms a tensor network, where the bulk tensor is the double layer tensor with bond dimension $d = D^2$
+
+---
+
 ![alt text](image-16.png)
 
 ---
+
+![alt text](image-23.png)
+
+---
+
+We can represent an infinite 2D square lattice with tensorsnetworks, consist of many many bulk tensors. We can see that:
 
 ![alt text](image-17.png)
 
 ---
 
+We can define the edge tensors as a special combination of the bulk tensors, and we can see that:
+
 ![alt text](image-18.png)
 
 ---
+
+We can also define the corner tensors as a special combination of the bulk tensors, and we can see that:
 
 ![alt text](image-19.png)
 
 ---
 
+We want to solve this self-consistent equation iteratively.
 ![alt text](image-20.png)
-
----
-
-![alt text](image-21.png)
 
 ---
 
@@ -81,7 +97,11 @@ $$H=\sum_{\langle i,j\rangle}S_i^xS_j^x+S_i^yS_j^y+S_i^zS_j^z$$
 
 ![alt text](image-23.png)
 
+---
 
+![alt text](image-25.png)
+
+---
 
 
 
