@@ -2,7 +2,6 @@ abstract type AbstractLattice end
 
 struct SquareLattice <: AbstractLattice end
 
-
 struct CTMRGRuntime{LT,T,N,AT<:AbstractArray{T,N},CT,ET}
     bulk::AT
     corner::CT
@@ -19,6 +18,18 @@ SquareCTMRGRuntime(bulk::AT,corner,edge) where {T,AT<:AbstractArray{T, 4}} = CTM
 getχ(rt::CTMRGRuntime) = size(rt.corner, 1)
 getD(rt::CTMRGRuntime) = size(rt.bulk, 1)
 
+const σx = Float64[0 1; 1 0]
+const σy = ComplexF64[0 -1im; 1im 0]
+const σz = Float64[1 0; 0 -1]
+const id2 = Float64[1 0; 0 1]
+
+function hamiltonian()
+    h =  ein"ij,kl -> ijkl"(σz,σz) -
+         ein"ij,kl -> ijkl"(σx, σx) -
+         ein"ij,kl -> ijkl"(σy, σy)
+    h = ein"ijcd,kc,ld -> ijkl"(h,σx,σx')
+    h = real(h ./ 2)
+end
 
 function SquareCTMRGRuntime(bulk::AbstractArray{T,4}, env::Val, χ::Int) where T
     return SquareCTMRGRuntime(bulk, _initializect_square(bulk, env, χ)...)
@@ -31,6 +42,7 @@ function _initializect_square(bulk::AbstractArray{T,4}, env::Val{:random}, χ::I
     edge += permutedims(conj(edge), (3,2,1))
     corner, edge
 end
+
 
 function _initializect_square(bulk::AbstractArray{T,4}, env::Val{:raw}, χ::Int) where T
     corner = zeros(T, χ, χ)
@@ -158,3 +170,4 @@ function (st::StopFunction)(state)
 
     return false
 end
+

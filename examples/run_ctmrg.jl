@@ -2,7 +2,7 @@ using TensorNetworkAD2
 using TensorNetworkAD2.OMEinsum
 
 
-h = hamiltonian(Heisenberg())
+h = hamiltonian()
 
 ipeps = SquareIPEPS(rand(2,2,2,2,2));
 
