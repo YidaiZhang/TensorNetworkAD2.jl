@@ -47,26 +47,6 @@ function _initializect_square(bulk::AbstractArray{T,4}, env::Val{:raw}, χ::Int)
 end
 
 
-mutable struct StopFunction{T,S}
-    oldvals::T
-    counter::Int
-    tol::S
-    maxit::Int
-end
-
-function (st::StopFunction)(state)
-    st.counter += 1
-    st.counter > st.maxit && return true
-
-    vals = state[2]
-    diff = norm(vals - st.oldvals)
-    diff <= st.tol && return true
-    st.oldvals = vals
-
-    return false
-end
-
-
 function ctmrg(rt::CTMRGRuntime; tol::Real, maxit::Integer)
     # initialize
     oldvals = fill(Inf, getχ(rt)*getD(rt))
@@ -104,4 +84,77 @@ function ctmrgstep(rt::SquareCTMRGRuntime, vals)
     edge /= norm(edge)
 
     return SquareCTMRGRuntime(bulk, corner, edge), vals
+end
+
+struct IPEPS{LT<:AbstractLattice, T, N, AT<:AbstractArray{T, N}}
+    bulk::AT
+end
+IPEPS{LT}(bulk::AT) where {LT,T,N,AT<:AbstractArray{T,N}} = IPEPS{LT,T,N,AT}(bulk)
+
+const SquareIPEPS{T} = IPEPS{SquareLattice, T, 5}
+function SquareIPEPS(bulk::AT) where {T,AT<:AbstractArray{T, 5}}
+    size(bulk,1) == size(bulk,2) == size(bulk,3) == size(bulk,4) || throw(DimensionMismatch(
+        "size of tensor error, should be `(d, d, d, d, s)`, got $(size(bulk))."))
+    IPEPS{SquareLattice,T,5,AT}(bulk)
+end
+getd(ipeps::SquareIPEPS) = size(ipeps.bulk, 1)
+gets(ipeps::SquareIPEPS) = size(ipeps.bulk, 5)
+
+function indexperm_symmetrize(ipeps::SquareIPEPS)
+    x = ipeps.bulk
+    x += permutedims(x, (1,4,3,2,5)) # left-right
+    x += permutedims(x, (3,2,1,4,5)) # up-down
+    x += permutedims(x, (2,1,4,3,5)) # diagonal
+    x += permutedims(x, (4,3,2,1,5)) # rotation
+    return SquareIPEPS(x / norm(x))
+end
+
+
+function energy(h::AbstractArray{T,4}, ipeps::IPEPS; χ::Int, tol::Real, maxit::Int) where T
+    ipeps = indexperm_symmetrize(ipeps)  
+    D = getd(ipeps)^2
+    s = gets(ipeps)
+    ap = ein"abcdx,ijkly -> aibjckdlxy"(ipeps.bulk, conj(ipeps.bulk))
+    ap = reshape(ap, D, D, D, D, s, s)
+    a = ein"ijklaa -> ijkl"(ap)
+
+    rt = SquareCTMRGRuntime(a, Val(:raw), χ)
+    rt  = ctmrg(rt; tol=tol, maxit=maxit)
+    e = expectationvalue(h, ap, rt)
+    return e
+end
+
+function expectationvalue(h, ap, rt::SquareCTMRGRuntime)
+    corner, edge = rt.corner, rt.edge
+    ap /= norm(ap)
+    l = ein"(ab,ica),(bde,eg),cjfdlm,gfk -> ijklm"(corner,edge,edge,corner,ap,edge)
+    e = ein"(abcij,abckl),ijkl -> "(l,l,h)[]
+    n = ein"ijkaa,ijkbb -> "(l,l)[]
+    return e/n
+end
+
+function fixedpoint(f, guess, stopfun)
+    for state in iterated(f, guess)
+        stopfun(state) && return state
+    end
+end
+
+mutable struct StopFunction{T,S}
+    oldvals::T
+    counter::Int
+    tol::S
+    maxit::Int
+end
+
+
+function (st::StopFunction)(state)
+    st.counter += 1
+    st.counter > st.maxit && return true
+
+    vals = state[2]
+    diff = norm(vals - st.oldvals)
+    diff <= st.tol && return true
+    st.oldvals = vals
+
+    return false
 end
