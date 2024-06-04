@@ -10,9 +10,6 @@ ipeps = SquareIPEPS(rand(2,2,2,2,2));
 
 A = TensorNetworkAD2.indexperm_symmetrize(ipeps);
 
-TensorNetworkAD2.energy(h,ipeps, χ=20, tol=1e-6,maxit=100)
-
-
 @time TensorNetworkAD2.energy(h,ipeps, χ=20, tol=1e-6,maxit=100)
 
 res = optimiseipeps(ipeps, h; χ=20, tol=1e-6, maxit=100,

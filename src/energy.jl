@@ -12,10 +12,10 @@ function energy(h::AbstractArray{T,4}, ipeps::IPEPS; χ::Int, tol::Real, maxit::
     return e
 end
 
-function expectationvalue(h, ap, rt::SquareCTMRGRuntime) where T
+function expectationvalue(h, ap, rt::SquareCTMRGRuntime)
     corner, edge = rt.corner, rt.edge
     ap /= norm(ap)
-    l = ein"(ab,bde),ica,(eg,gfk),cjfdlm -> ijklm"(corner,edge,edge,corner,edge,ap)
+    l = ein"(ab,ica),(bde,eg),cjfdlm,gfk -> ijklm"(corner,edge,edge,corner,ap,edge)
     e = ein"(abcij,abckl),ijkl -> "(l,l,h)[]
     n = ein"ijkaa,ijkbb -> "(l,l)[]
     return e/n
