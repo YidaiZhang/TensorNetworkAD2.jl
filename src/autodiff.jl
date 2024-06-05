@@ -1,5 +1,3 @@
-
-
 @Zygote.nograd StopFunction
 @Zygote.nograd _initializect_square
 

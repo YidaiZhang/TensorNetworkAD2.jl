@@ -44,9 +44,9 @@ const σz = Float64[1 0; 0 -1]
 const id2 = Float64[1 0; 0 1]
 
 function hamiltonian()
-    h =  ein"ij,kl -> ijkl"(σz,σz) -
-         ein"ij,kl -> ijkl"(σx, σx) -
-         ein"ij,kl -> ijkl"(σy, σy)
+    h =  ein"(ij,kl) -> ijkl"(σz,σz) -
+         ein"(ij,kl) -> ijkl"(σx, σx) -
+         ein"(ij,kl) -> ijkl"(σy, σy)
     h = ein"ijcd,kc,ld -> ijkl"(h,σx,σx')
     h = real(h ./ 2)
 end
@@ -88,7 +88,7 @@ function ctmrgstep(rt::SquareCTMRGRuntime, vals)
     # grow
     bulk, corner, edge = rt.bulk, rt.corner, rt.edge
     D, χ = getD(rt), getχ(rt)
-    cp = ein"(ad,iba),dcl,jkcb -> ijlk"(corner, edge, edge, bulk)
+    cp = ein"((ad,iba),dcl),jkcb -> ijlk"(corner, edge, edge, bulk)
     tp = ein"(iam,jkla) -> ijklm"(edge,bulk)
 
     # renormalize
@@ -97,8 +97,8 @@ function ctmrgstep(rt::SquareCTMRGRuntime, vals)
     u, s, v = svd(cpmat)
     z = reshape(u[:, 1:χ], χ, D, χ)
 
-    corner = ein"(abcd,abi),cdj -> ij"(cp, conj(z), z)
-    edge = ein"(abjcd,abi),dck -> ijk"(tp, conj(z), z)
+    corner = ein"((abcd,abi),cdj) -> ij"(cp, conj(z), z)
+    edge = ein"((abjcd,abi),dck) -> ijk"(tp, conj(z), z)
 
     vals = s ./ s[1]
 
@@ -130,9 +130,9 @@ end
 function expectationvalue(h, ap, rt::SquareCTMRGRuntime)
     corner, edge = rt.corner, rt.edge
     ap /= norm(ap)
-    l = ein"(ab,ica),(bde,eg),cjfdlm,gfk -> ijklm"(corner,edge,edge,corner,ap,edge)
+    l = ein"((ab,ica),(bde,eg)),cjfdlm,gfk -> ijklm"(corner,edge,edge,corner,ap,edge)
     e = ein"(abcij,abckl),ijkl -> "(l,l,h)[]
-    n = ein"ijkaa,ijkbb -> "(l,l)[]
+    n = ein"(ijkaa,ijkbb) -> "(l,l)[]
     return e/n
 end
 
