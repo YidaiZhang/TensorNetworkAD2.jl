@@ -24,6 +24,7 @@ export fixedpoint
 
 
 
+include("autodiff.jl")
 include("trg_to.jl")
 include("trg_ome.jl")
 include("trg_itensors.jl")
