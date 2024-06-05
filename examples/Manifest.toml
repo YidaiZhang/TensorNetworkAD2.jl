@@ -2,7 +2,7 @@
 
 julia_version = "1.10.3"
 manifest_format = "2.0"
-project_hash = "b263c499733f0c66534c002b388eafd4ee662fbf"
+project_hash = "4dc99710f334f726350e06a639474c5ab93c5e6f"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -591,9 +591,9 @@ version = "1.0.14+0"
 
 [[deps.Functors]]
 deps = ["LinearAlgebra"]
-git-tree-sha1 = "d3e63d9fa13f8eaa2f06f64949e2afc593ff52c2"
+git-tree-sha1 = "8a66c07630d6428eaab3506a0eabfcf4a9edea05"
 uuid = "d9f16b24-f501-4c13-a1f2-28368ffc5196"
-version = "0.4.10"
+version = "0.4.11"
 
 [[deps.Future]]
 deps = ["Random"]
@@ -1126,9 +1126,9 @@ version = "2023.1.10"
 
 [[deps.NDTensors]]
 deps = ["Accessors", "Adapt", "ArrayLayouts", "BlockArrays", "Compat", "Dictionaries", "EllipsisNotation", "FillArrays", "Folds", "Functors", "HalfIntegers", "InlineStrings", "LinearAlgebra", "MacroTools", "MappedArrays", "PackageExtensionCompat", "Random", "SimpleTraits", "SparseArrays", "SplitApplyCombine", "StaticArrays", "Strided", "StridedViews", "TimerOutputs", "TupleTools", "VectorInterface"]
-git-tree-sha1 = "ab1b7f263648a013aeb6f70076b1d081eb4cbd2f"
+git-tree-sha1 = "508759ccffb92bbb78adb8281b04825e26f69ffe"
 uuid = "23ae76d9-e61a-49c4-8f12-3f1a16adf9cf"
-version = "0.3.18"
+version = "0.3.19"
 
     [deps.NDTensors.extensions]
     NDTensorsAMDGPUExt = ["AMDGPU", "GPUArraysCore"]

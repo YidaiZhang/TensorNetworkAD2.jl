@@ -8,6 +8,10 @@ using QuadGK
 using Random
 using IterTools: iterated,imap
 using Base.Iterators: take, drop
+using Zygote
+using Optim
+
+import LinearAlgebra
 
 
 
@@ -20,6 +24,8 @@ export IPEPS, SquareIPEPS
 export energy, expectationvalue
 export StopFunction
 export fixedpoint
+export num_grad
+export optimiseipeps
 
 
 
@@ -28,6 +34,7 @@ include("trg_ome.jl")
 include("trg_itensors.jl")
 include("2d_ising.jl")
 include("ctmrg.jl")
+include("autodiff.jl")
 
 
 end

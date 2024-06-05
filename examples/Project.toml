@@ -2,3 +2,4 @@
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 Optim = "429524aa-4258-5aef-a3af-852621145aeb"
 TensorNetworkAD2 = "2ea729ad-3ca8-4d46-8a0a-38f7dc88b7de"
+Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
