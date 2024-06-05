@@ -1,6 +1,6 @@
 using TensorNetworkAD2
 using TensorNetworkAD2.OMEinsum
-using Zygote
+using TensorNetworkAD2.Zygote
 using LinearAlgebra
 using Optim
 
