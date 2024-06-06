@@ -23,7 +23,8 @@ println("lnZ = ", calc_lnZ(0.5))
 
 grad = Zygote.gradient(calc_lnZ, β_array)
 
-grad2 = Zygote.gradient(x -> Zygote.gradient(calc_lnZ, x)[1], β_array)
+
+# grad2 = Zygote.gradient(x -> Zygote.gradient(calc_lnZ, x)[1], β_array)
 
 
 # analyze the gradient
