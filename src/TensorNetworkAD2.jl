@@ -26,6 +26,7 @@ export StopFunction
 export fixedpoint
 export num_grad
 export optimiseipeps
+export svd_back, trg_svd
 
 
 

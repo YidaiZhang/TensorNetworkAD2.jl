@@ -1,4 +1,4 @@
-function trg(K::Float64, Dcut::Int, no_iter::Int)
+function trg(K::Real, Dcut::Int, no_iter::Int)
     D = 2
 
     T = zeros(Float64, D, D, D, D)
@@ -37,3 +37,6 @@ function trg(K::Float64, Dcut::Int, no_iter::Int)
     trace = ein"ijij -> "(T)[]
     lnZ += log(trace)
 end
+
+
+
