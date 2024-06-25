@@ -38,7 +38,7 @@ With each 2-index tensor in the above diagram defined to equal the matrix M, it 
 Now let us consider the main problem of interest. For two dimensions, the energy function can be written as:
 $$E(\sigma_1,\sigma_2,\ldots)=\sum_{\langle ij\rangle}\sigma_i\sigma_j$$
 
-Where the notation $<ij>$ means the sum only includes i, j which are neighboring sites. It helps to visualize the system:
+Where the notation <$ij$> means the sum only includes i, j which are neighboring sites. It helps to visualize the system:
 ![alt text](/notes/image29.png)
 
 The blue lines represent the local energies $\sigma_i\sigma_j$, the total energy E of each configuration is the sum of all of these local energies.Interestingly, it is again possible to rewrite the partition function sum Z as a network of contracted tensors. Define the tensor to be:
@@ -78,7 +78,7 @@ $A_1$ which has four indices just like $A_0$, contracting the $A_1$ tensors in a
     <img src="/notes/image36.png" alt="alt text" width="400"/>
 </div>
 
-To compute Z defined by contracting a square lattice of $2^{N+1}$tensors, one repeats the above two steps (factor and recombine) N times until only a single tensor remains. Calling this final tensor $A_N$, the result Z of contracting the original network is equal to the following “double trace”of $A_N$:
+To compute Z defined by contracting a square lattice, one repeats the above two steps (factor and recombine) N times until only a single tensor remains. Calling this final tensor $A_N$, the result Z of contracting the original network is equal to the following “double trace”of $A_N$:
 
 <div align="center">
     <img src="/notes/image37.png" alt="alt text" width="250"/>
@@ -87,7 +87,7 @@ To compute Z defined by contracting a square lattice of $2^{N+1}$tensors, one re
 
 
 ## Corner transfer matrix renormalization group (CTMRG)
-Gradient based optimization methods are the established state-of-the-art paradigm to study strongly entangled quantum systems in two dimensions with Projected Entangled Pair States. However, the key ingredient, the gradient itself, has proven challenging to calculate accurately and reliably in the case of a corner transfer matrix (CTM)-based approach.
+Gradient based optimization methods are the established state-of-the-art paradigm to study strongly entangled quantum systems in two dimensions with Projected Entangled Pair States. However, the key ingredient, the gradient itself, has proven challenging to calculate accurately and reliably in the case of a corner transfer matrix based approach.
 
 Tensor Network methods are designed specifically to deal with many body systems and have already proven very useful in the studies of strongly entangled states. One of their early successes was the discovery of the density matrix renormalization group (DMRG) algorithm and an independently developed matrix product state (MPS) ansatz  that proved strikingly effective for studying one dimensional gapped spin systems. The two-dimensional extension of these ideas are projected entangled pair states (PEPS).
 
@@ -115,6 +115,14 @@ Consider 2 higher-order tensors $T^{s1,s2,s3,s4,s5,s6}$ and $W^{s1, s2, s3, s4, 
 
 <div align="center">
     <img src="/notes/image39.png" alt="alt text" width="650" height="130"/>
+</div>
+
+<div align="center">
+    <img src="/notes/image-13.png" alt="alt text" width="300" height="150"/>
+</div>
+
+<div align="center">
+    <img src="/notes/image-16.png" alt="alt text" width="400" height="150"/>
 </div>
 
 A double PEPS tensors in (C) is formed by contracting the PEPS tensor A and its conjugate via physical index and grouping the remaining open indices. We consider a variational study of the square lattice antifer- romagnetic Heisenberg model, and we want to find the ground state, minimize the expect energy: $\langle\psi|H|\psi\rangle/\langle\psi|\psi\rangle$.
