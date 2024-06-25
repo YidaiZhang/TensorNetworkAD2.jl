@@ -122,5 +122,35 @@ Consider 2 higher-order tensors $T^{s1,s2,s3,s4,s5,s6}$ and $W^{s1, s2, s3, s4, 
 
 A double PEPS tensors in (C) is formed by contracting the PEPS tensor A and its conjugate via physical index and grouping the remaining open indices. We consider a variational study of the square lattice antifer- romagnetic Heisenberg model, and we want to find the ground state, minimize the expect energy: $\langle\psi|H|\psi\rangle/\langle\psi|\psi\rangle$.
 
+![alt text](/notes/image-23.png)
+
 In order to calculate a local observable one needs to approximate an infinite double-layer PEPS tensors network around the PEPS tensors where the operator acts with a finite environment formed by corner tensors C and the edge tensors T.
 
+We can represent an infinite 2D square lattice with tensorsnetworks, consist of many many bulk tensors. We can see that:
+![alt text](/notes/image-40.png)
+
+We can define the edge tensors as a special combination of the bulk tensors, and we can see that:
+<div align="center">
+    <img src="/notes/image41.png" alt="alt text" width="400" height="80"/>
+</div>
+
+
+We can also define the corner tensors as a special combination of the bulk tensors, and we can see that:
+<div align="center">
+    <img src="/notes/image42.png" alt="alt text" width="300" height=280"/>
+</div>
+
+We want to solve this self-consistent equation iteratively:
+<div align="center">
+    <img src="/notes/image43.png" alt="alt text" width="400" height=200"/>
+</div>
+
+For the corner tensors and edge tensors iteration, we can see that:
+![alt text](/notes/image-22.png)
+
+1. Contract the bulk tensor with the corner and edge tensors to form a 4-leg tensor.
+2. Perform truncated SVD to the 4-leg tensor, keeping the singular dimensions up to the cut off ￼, Keep the truncated singular matrix as the isometric projector.
+3. Apply the isometry to the 4-leg tensor from the first step to find a new corner tensor
+4. Apply the same isometry to find a new edge tensor for the next step. And iterate this procedure until convergence.One sees that the same bulk tensor with bond dimension d appears in each step of the CTMRG iteration. Due to this reason, the converged environment tensors will depend on the bulk tensor in a complicated way.
+
+![alt text](/notes/image-23.png)
