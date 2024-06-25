@@ -1,10 +1,9 @@
 using TensorNetworkAD2
-using TensorNetworkAD2:  getχ, SquareCTMRGRuntime, CTMRGRuntime, getd, gets, ctmrg
+using TensorNetworkAD2:  getχ, SquareCTMRGRuntime, CTMRGRuntime, getd, gets, ctmrg, AbstractLattice, SquareIPEPS
 using Test, Random
 using Zygote
 
 @testset "IPEPS" begin
-    @test SquareLattice() isa AbstractLattice
     sq = SquareIPEPS(randn(3,3,3,3,2))
     @test sq isa SquareIPEPS
     @test getd(sq) == 3
