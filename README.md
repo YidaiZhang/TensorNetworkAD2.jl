@@ -8,11 +8,8 @@
 ## Introduction
 Huanhai and I try to reproduce the results of the paper [Liao, H., Liu, J., Wang, L., Xiang, T., 2019. Differentiable Programming Tensor Networks. Physical Review X 9, 31041]  in Julia.
 
-Results are shown below:
-![](./examples/energy_density.png)
-![](./examples/specific_heat.png)
 
-## Tensoor renormalization group (TRG)
+## Tensor renormalization group (TRG)
 The tensor renormalization group or TRG algorithm is a strategy for evaluating a fully contracted network of tensors. The strategy is to factorize each tensor in the network using a truncated singular value decomposition (SVD) into two smaller factor tensors. Then each factor tensor is contracted with another factor from a neighboring tensor, resulting in a new contracted lattice of half as many tensors.
 
 The term “renormalization group” is a term used in the physics literature to refer to processes where less important information at small distance scales is repeatedly discarded until only the most important information remains.
@@ -154,3 +151,16 @@ For the corner tensors and edge tensors iteration, we can see that:
 4. Apply the same isometry to find a new edge tensor for the next step. And iterate this procedure until convergence.One sees that the same bulk tensor with bond dimension d appears in each step of the CTMRG iteration. Due to this reason, the converged environment tensors will depend on the bulk tensor in a complicated way.
 
 ![alt text](/notes/image-23.png)
+
+## Results
+Results are shown below:
+![](./examples/energy_density.png)
+![](./examples/specific_heat.png)
+
+<div align="center">
+    <img src="/notes/image44.png" alt="alt text" width="600" height=400"/>
+</div>
+
+<div align="center">
+    <img src="/notes/image45.png" alt="alt text" width="600" height=200"/>
+</div>
