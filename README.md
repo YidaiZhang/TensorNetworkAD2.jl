@@ -5,7 +5,84 @@
 [![Build Status](https://github.com/YidaiZhang/TensorNetworkAD2.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/YidaiZhang/TensorNetworkAD2.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/YidaiZhang/TensorNetworkAD2.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/YidaiZhang/TensorNetworkAD2.jl)
 
+## Introduction
 Huanhai and I try to reproduce the results of the paper [Liao, H., Liu, J., Wang, L., Xiang, T., 2019. Differentiable Programming Tensor Networks. Physical Review X 9, 31041]  in Julia.
 
+Results are shown below:
 ![](./examples/energy_density.png)
 ![](./examples/specific_heat.png)
+
+### Tensoor renormalization group (TRG)
+The tensor renormalization group or TRG algorithm is a strategy for evaluating a fully contracted network of tensors. The strategy is to factorize each tensor in the network using a truncated singular value decomposition (SVD) into two smaller factor tensors. Then each factor tensor is contracted with another factor from a neighboring tensor, resulting in a new contracted lattice of half as many tensors.
+
+The term “renormalization group” is a term used in the physics literature to refer to processes where less important information at small distance scales is repeatedly discarded until only the most important information remains.
+
+TRG can be used to compute certain large, non-trivial sums by exploiting the fact that they can be recast as the contraction of a lattice of small tensors.
+A classic example of such a sum is the “partition function” Z of the classical Ising model at temperature T, defined to be:
+
+$$Z=\sum_{\sigma_1\sigma_2\sigma_3\ldots}e^{-E(\sigma_1,\sigma_2,\sigma_3,\ldots)/T}$$
+
+where each Ising "spin" $\sigma$ is just a variable taking the values +1,-1 and the energy $E(\sigma_1,\sigma_2,\sigma_3,\ldots)$ is the sum of products $\sigma_i\sigma_j$ of neighboring $\sigma$ variables.
+
+In one dimension, spins only have two neighbors since they are arranged along a chain. For a finite-size system of N Ising spins, the usual convention is to use periodic boundary conditions meaning that the Nth spin connects back to the first around a circle:
+
+$$E(\sigma_1,\sigma_2,\sigma_3,\ldots,\sigma_N)=\sigma_1\sigma_2+\sigma_2\sigma_3+\sigma_3\sigma_4+\ldots+\sigma_N\sigma_1$$
+
+The classic “transfer matrix” trick for computing Z goes as follows:
+$$Z=\sum_\sigma\exp\left(\frac{-1}T\sum_n\sigma_n\sigma_{n+1}\right)=\sum_\sigma\prod_ne^{-(\sigma_n\sigma_{n+1})/T}=\mathrm{Tr}\left(M^N\right)$$
+
+the transfer matrix M Is a 2x2 matrix with elements:
+$$M_{\sigma\sigma^{\prime}}=e^{-(\sigma\sigma^{\prime})/T}.$$
+
+We can view $Tr(M^N)$ as a chain of tensor contractions around a circle: 
+![alt text](/notes/image28.png)
+With each 2-index tensor in the above diagram defined to equal the matrix M, it is an exact rewriting of the partition function Z as a tensor network.
+
+Now let us consider the main problem of interest. For two dimensions, the energy function can be written as:
+$$E(\sigma_1,\sigma_2,\ldots)=\sum_{\langle ij\rangle}\sigma_i\sigma_j$$
+
+Where the notation $<ij>$ means the sum only includes i, j which are neighboring sites. It helps to visualize the system:
+![alt text](/notes/image29.png)
+
+The blue lines represent the local energies $\sigma_i\sigma_j$, the total energy E of each configuration is the sum of all of these local energies.Interestingly, it is again possible to rewrite the partition function sum Z as a network of contracted tensors. Define the tensor to be:
+$$A^{\sigma_t\sigma_r\sigma_b\sigma_l} = e^{-(\sigma_t\sigma_r+\sigma_r\sigma_b+\sigma_b\sigma_l+\sigma_l\sigma_t)/T}$$
+
+The interpretation of this tensor is that it computes the local energies between the four spins that live on its indices, and its value is the Boltzmann probability weight $e^{-E/T}$, associated with these energies. Note its similarity to the one-dimensional transfer matrix M.
+<div align="center">
+    <img src="/notes/image30.png" alt="alt text" width="250"/>
+</div>
+
+With A defined, the partition function Z for the two-dimensional Ising model can be found by contracting the following network of A tensors:
+<div align="center">
+    <img src="/notes/image31.png" alt="alt text" width="300"/>
+</div>
+
+The above drawing is of a lattice of 32 Ising spins (recall that the spins live on the tensor indices). The indices at the edges of this square wrap around in a periodic fashion because the energy function was defined using periodic boundary conditions.
+
+TRG is a strategy for computing the above 2d network, which is just equal to a single number Z (since there are no uncontracted external indices). The TRG approach is to locally replace individual A tensors with pairs of lower-rank tensors which guarantee the result of the contraction remains the same to a good approximation. These smaller tensors can then be recombined in a different way that results in a more sparse, yet equivalent network.
+
+
+![alt text](/notes/image32.png)
+Both factorizations can be computed using the singular value decomposition (SVD). For example, to compute the first factorization, view $A_0$ as a matrix with a collective “row” index $\sigma_l$ and $\sigma_t$ and collective “column” index $\sigma_r$ and $\sigma_b$. After performing an SVD of $A_0$ in this way, further factorize the singular value matrix $S$ as $S=\sqrt{S}\sqrt{S}$ and absorb each factor into U and V to create the factors $F_1,F_2$.
+![alt text](/notes/image33.png)
+
+Importantly, the SVD is only done approximately by retaining just the ￼ largest singular values and discarding the columns of U and V corresponding to the smaller singular values. This truncation is crucial for keeping the cost of the TRG algorithm under control. Making the above substitutions, either $A_0=F_1F_3,A_0=F_2F_4$ , on alternating lattice sites, transforms the original tensor network into the following network:
+
+![alt text](/notes/image34.png)
+
+Finally by contracting the four F tensors in the following way:
+<div align="center">
+    <img src="/notes/image35.png" alt="alt text" width="400"/>
+</div>
+
+$A_1$ which has four indices just like $A_0$, contracting the $A_1$ tensors in a square-lattice pattern gives the same result (up to SVD truncation errors) as contracting the original $A_0$ tensors, only there are half as many $A_1$ tensors, (each $A_0$ consists of two F’s while each $A_1$ consists of four F’s).
+
+<div align="center">
+    <img src="/notes/image36.png" alt="alt text" width="400"/>
+</div>
+
+To compute Z defined by contracting a square lattice of $2^{N+1}$tensors, one repeats the above two steps (factor and recombine) N times until only a single tensor remains. Calling this final tensor $A_N$, the result Z of contracting the original network is equal to the following “double trace”of $A_N$:
+
+<div align="center">
+    <img src="/notes/image37.png" alt="alt text" width="200"/>
+</div>
