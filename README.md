@@ -172,3 +172,10 @@ Results are shown below:
 <div align="center">
     <img src="/notes/image45.png" alt="alt text" width="600" height=200"/>
 </div>
+
+Please use this package with caution, as it is still under development.
+```julia
+using Pkg
+Pkg.add("TensorNetworkAD2")
+```
+
